@@ -1,0 +1,32 @@
+{
+    "manifest_version": 3,
+    "name": "GYB-helper",
+    "version": "0.0.1",
+    "description": "GYB-helper helps to start initiate a chat with lifetime customers",
+    "permissions": [
+        "activeTab",
+        "storage",
+        "scripting",
+        "tabs"
+    ],
+    "action": {
+        "default_title": "gyb-helper",
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "image1.jpg",
+            "48": "image1.jpg",
+            "128": "image1.jpg"
+        }
+    },
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>", "http://127.0.0.1:5500/*"],
+            "js": ["content.js"],
+            "run_at": "document_end"
+        }
+    ]
+
+  }  

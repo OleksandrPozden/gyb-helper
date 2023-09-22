@@ -1,0 +1,24 @@
+# Instructions:
+
+## Create virtual environment (needed only once)
+`
+python -m venv venv
+`
+## Run virtual environment:
+`
+venv\Scripts\activate
+`
+
+
+# FOR DEVELOPING PURPOSES
+
+button - class="lc-Button-module__btn__content___wefl2"
+div.button - class="css-1q1efea"
+
+.css-1q1efea .lc-Button-module__btn__content___wefl2
+
+select row by class .css-14wsju2
+and retrieve unique id of this element from attibute div["data-testid"]
+ `data-testid="6c23a184-67c6-4f68-920c-93f1cb8be9ca"`
+
+to get cell with url select by class .css-1xicsyo
