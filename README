@@ -8,7 +8,11 @@ python -m venv venv
 `
 venv\Scripts\activate
 `
+# Release notes:
 
+## 0.1.0
+    - caching response from python server
+    - chrome storage refusal 
 
 # FOR DEVELOPING PURPOSES
 
