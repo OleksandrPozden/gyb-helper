@@ -2,14 +2,12 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 import requests
 from datetime import datetime
-from flask_caching import Cache
 
 
 app = Flask(__name__)
 CORS(app)
 
-cache = Cache(app, config={'CACHE_TYPE': 'simple', 'CACHE_DEFAULT_TIMEOUT': 31536000})  # 31536000 seconds = 1 year
-
+cache = {}
 
 data = {
     "total_requests": 0,
@@ -36,17 +34,19 @@ def clear():
     return 'Cleared'
 
 @app.route('/', methods=["POST"])
-@cache.cached() 
 def check_url():
     data = request.get_json()
     url = data.get("url")
     if not url:
         return jsonify({"error": "Missing 'param' in request body"}), 400
+    if url in cache:
+        return jsonify(cache[url])
     r = requests.get(url)
     if "lifetime" in r.text.lower():
         data = {"message": True}
     else:
         data = {"message": False}
+    cache[url] = data
     count(data["message"], url)
     return jsonify(data)
 
