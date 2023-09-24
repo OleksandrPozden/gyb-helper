@@ -11,10 +11,8 @@ let main = async () => {
         const url = element.getElementsByClassName('css-1xicsyo')[0].getAttribute('href');
 
         if (!button.textContent.toLowerCase().includes("start chat")) {
-          console.log("skipped row")
           continue;
         }
-        console.log(id)
         const response = await fetch("http://127.0.0.1:5000", {
           method: 'POST',
           headers: {
@@ -32,7 +30,7 @@ let main = async () => {
           const newText = document.createTextNode("LIFETIME");
           const child = button.firstElementChild
           button.insertBefore(newText, child)
-          // button.click()
+          button.click()
         }
         
       }
@@ -44,6 +42,7 @@ let main = async () => {
 
 let runApp = () => {
   if (isWorking == false) {
+    console.log("started")
     isWorking = true
     main()
     
@@ -73,5 +72,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     stopApp();
   }
   sendResponse({ "response": "nice!" })
+}
+)
+
+chrome.storage.onChanged.addListener((changes, areaName) =>{
+  if (changes.state.newValues == 'working'){
+    runApp()
+  }
+  else {
+    stopApp();
+  }
 }
 )

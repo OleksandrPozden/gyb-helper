@@ -12,7 +12,10 @@ venv\Scripts\activate
 
 ## 0.1.0
     - caching response from python server
-    - chrome storage refusal 
+    - chrome storage refusal
+
+## 0.1.1
+    - make it able to start/stop app on any tab
 
 # FOR DEVELOPING PURPOSES
 
