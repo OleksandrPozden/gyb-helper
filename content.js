@@ -8,7 +8,8 @@ let main = async () => {
       for (let element of rows) {
         const id = element.getAttribute('data-testid');
         const button = element.getElementsByClassName('css-1q1efea')[0];
-        const url = element.getElementsByClassName('css-1xicsyo')[0].getAttribute('href');
+        const urlElement = element.getElementsByClassName('css-1xicsyo')[0]
+        const url = urlElement.getAttribute('href');
 
         if (!button.textContent.toLowerCase().includes("start chat")) {
           continue;
@@ -26,10 +27,8 @@ let main = async () => {
         }
 
         const data = await response.json();
-        if (data.message == true) {
-          const newText = document.createTextNode("LIFETIME");
-          const child = button.firstElementChild
-          button.insertBefore(newText, child)
+        if (data.message === true && urlElement.innerHTML !== "LIFETIME") {
+          urlElement.innerHTML = "LIFETIME";
           button.click()
         }
         

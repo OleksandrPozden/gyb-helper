@@ -17,6 +17,9 @@ venv\Scripts\activate
 ## 0.1.1
     - make it able to start/stop app on any tab
 
+## 0.1.2
+    - click on the button when lifetime is found
+
 # FOR DEVELOPING PURPOSES
 
 button - class="lc-Button-module__btn__content___wefl2"

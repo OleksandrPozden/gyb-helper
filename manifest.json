@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "GYB-helper",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "GYB-helper helps to start initiate a chat with lifetime customers",
     "permissions": [
         "activeTab",
@@ -23,7 +23,7 @@
     },
     "content_scripts": [
         {
-            "matches": ["https://my.livechatinc.com/traffic/*", "http://my.livechatinc.com/traffic/*", "https://my.livechatinc.com/traffic""http://127.0.0.1:5500/test.html"],
+            "matches": ["https://my.livechatinc.com/traffic/*", "http://my.livechatinc.com/traffic/*", "http://127.0.0.1:5500/test.html"],
             "js": ["content.js"],
             "run_at": "document_end"
         }
