@@ -42,7 +42,7 @@ def check_url():
     if url in cache:
         return jsonify(cache[url])
     r = requests.get(url)
-    if "lifetime" in r.text.lower():
+    if "Driver Updater V5 Platinum - 1 year" in r.text.lower():
         data = {"message": True}
     else:
         data = {"message": False}
