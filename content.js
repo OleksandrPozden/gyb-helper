@@ -29,7 +29,7 @@ let main = async () => {
         const data = await response.json();
         if (data.message === true && urlElement.innerHTML !== "LIFETIME") {
           urlElement.innerHTML = "LIFETIME";
-          button.click()
+          button.firstElementChild.click()
         }
         
       }
