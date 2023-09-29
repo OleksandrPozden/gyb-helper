@@ -2,8 +2,8 @@ let isWorking = false;
 
 let main = async () => {
   while (isWorking==true) {
+    await new Promise(r => setTimeout(r, 10));
     try {
-      //await new Promise(r => setTimeout(r, 100));
       const rows = document.querySelectorAll('.css-14wsju2');
       for (let element of rows) {
         const id = element.getAttribute('data-testid');
