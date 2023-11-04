@@ -21,6 +21,16 @@ def count(result, url):
         url
     ])
 
+def get_subscription(text):
+    message = "NOTHING"
+    if "lifetime" in text:
+        message = "LIFETIME"
+    if "month" in text:
+        message = "MONTHLY"
+    if "year" in text:
+        message = "YEARLY"
+    return message
+
 @app.route('/', methods=['GET'])
 def index():
     result = f"total requests: {data['total_requests']}<br>"
@@ -42,10 +52,9 @@ def check_url():
     if url in cache:
         return jsonify(cache[url])
     r = requests.get(url)
-    if "lifetime" in r.text.lower():
-        data = {"message": True}
-    else:
-        data = {"message": False}
+    text = r.text.lower()
+    message = get_subscription(text)
+    data = {"message": message}
     cache[url] = data
     count(data["message"], url)
     return jsonify(data)

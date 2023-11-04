@@ -1,4 +1,6 @@
 let isWorking = false;
+let messageList = ["LIFETIME", "LIFETIME__NOT_CLICKED", "MONTHLY", "YEARLY", "NOTHING"];
+let limitNumberOfVisits = 8;
 
 let main = async () => {
   while (isWorking==true) {
@@ -7,13 +9,18 @@ let main = async () => {
       const rows = document.querySelectorAll('.css-14wsju2');
       for (let element of rows) {
         const id = element.getAttribute('data-testid');
-        const button = element.getElementsByClassName('css-1q1efea')[0];
+        const numberOfVisits = element.querySelector(".css-8eaugs .css-plwatf").textContent;
+        const button = element.getElementsByClassName('css-1q1efea')[0].firstElementChild;
         const urlElement = element.getElementsByClassName('css-1xicsyo')[0]
         const url = urlElement.getAttribute('href');
 
         if (!button.textContent.toLowerCase().includes("start chat")) {
           continue;
         }
+        if (messageList.includes(urlElement.innerHTML)){
+          continue;
+        }
+        console.log(url);
         const response = await fetch("http://127.0.0.1:5000", {
           method: 'POST',
           headers: {
@@ -27,10 +34,16 @@ let main = async () => {
         }
 
         const data = await response.json();
-        if (data.message === true && urlElement.innerHTML !== "LIFETIME") {
-          urlElement.innerHTML = "LIFETIME";
-          button.firstElementChild.click()
+        let message = data.message;
+        if (message === "LIFETIME"){
+          if (numberOfVisits > limitNumberOfVisits){
+            message += "__NOT_CLICKED";
+          }
+          else{
+            button.click();
+          }
         }
+        urlElement.innerHTML = message;
         
       }
     } catch (error) {

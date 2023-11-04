@@ -10,15 +10,21 @@ venv\Scripts\activate
 `
 # Release notes:
 
-## 0.1.0
-    - caching response from python server
-    - chrome storage refusal
+## 0.2.2
+    This version of extension is faster and effecient in sense of requests.
+    Also other important features that are introduced to users:
+    - does not open a chat if number of visits are higher than 8
+    - displays type of subscription for every customer
+
+## 0.1.2
+    - click on the button when lifetime is found
 
 ## 0.1.1
     - make it able to start/stop app on any tab
 
-## 0.1.2
-    - click on the button when lifetime is found
+## 0.1.0
+    - caching response from python server
+    - chrome storage refusal
 
 # FOR DEVELOPING PURPOSES
 
