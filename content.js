@@ -1,6 +1,7 @@
 let isWorking = false;
 let messageList = ["LIFETIME", "LIFETIME__NOT_CLICKED", "MONTHLY", "YEARLY", "NOTHING"];
 let limitNumberOfVisits = 8;
+let pickUpCountryList = ["united states", "canada", "united kingdom", "australia", "new zealand"]
 
 let main = async () => {
   while (isWorking==true) {
@@ -10,6 +11,7 @@ let main = async () => {
       for (let element of rows) {
         const id = element.getAttribute('data-testid');
         const numberOfVisits = element.querySelector(".css-8eaugs .css-plwatf").textContent;
+        const country = element.getElementsByClassName('css-f2kktt').textContent;
         const button = element.getElementsByClassName('css-1q1efea')[0].firstElementChild;
         const urlElement = element.getElementsByClassName('css-1xicsyo')[0]
         const url = urlElement.getAttribute('href');
@@ -36,7 +38,7 @@ let main = async () => {
         const data = await response.json();
         let message = data.message;
         if (message === "LIFETIME"){
-          if (numberOfVisits > limitNumberOfVisits){
+          if (numberOfVisits > limitNumberOfVisits && !country.toLowerCase().includes(pickUpCountryList)){
             message += "__NOT_CLICKED";
           }
           else{

@@ -22,14 +22,13 @@ def count(result, url):
     ])
 
 def get_subscription(text):
-    message = "NOTHING"
     if "lifetime" in text:
-        message = "LIFETIME"
-    if "month" in text:
-        message = "MONTHLY"
+        return "LIFETIME"
     if "year" in text:
-        message = "YEARLY"
-    return message
+        return "YEARLY"
+    if "month" in text:
+        return "MONTHLY"
+    return "NOTHING"
 
 @app.route('/', methods=['GET'])
 def index():
