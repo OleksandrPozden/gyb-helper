@@ -38,7 +38,7 @@ let main = async () => {
         const data = await response.json();
         let message = data.message;
         if (message === "LIFETIME"){
-          if (numberOfVisits > limitNumberOfVisits && !country.toLowerCase().includes(pickUpCountryList)){
+          if (numberOfVisits > limitNumberOfVisits || !country.toLowerCase().includes(pickUpCountryList)){
             message += "__NOT_CLICKED";
           }
           else{
@@ -49,7 +49,7 @@ let main = async () => {
         
       }
     } catch (error) {
-      console.error("An error occurred:", error);
+      console.log("An error occurred:", error);
     }
   }
 }
