@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 import requests
 from datetime import datetime
-from bs4 import BeautifulSoup
+import re
 
 
 app = Flask(__name__)
@@ -31,6 +31,13 @@ def get_subscription(text):
         return "MONTHLY"
     return "NOTHING"
 
+def remove_link_and_script_tags(content):
+    link_tag = re.compile(r'<link\b[^>]*>.*?</link>', re.DOTALL)
+    script_tag = re.compile(r'<script\b[^>]*>.*?</script>', re.DOTALL)
+    content = re.sub(script_tag, '', content)
+    content = re.sub(link_tag, '', content)
+    return content
+
 @app.route('/', methods=['GET'])
 def index():
     result = f"total requests: {data['total_requests']}<br>"
@@ -53,8 +60,7 @@ def check_url():
         return jsonify(cache[url])
     r = requests.get(url)
     text = r.text.lower()
-    soup = BeautifulSoup(text, 'lxml')
-    message = get_subscription(soup.get_text().lower())
+    message = get_subscription(remove_link_and_script_tags(text))
     data = {"message": message}
     cache[url] = data
     count(data["message"], url)
