@@ -11,14 +11,16 @@ let main = async () => {
       for (let element of rows) {
         const id = element.getAttribute('data-testid');
         const numberOfVisits = element.querySelector(".css-8eaugs .css-plwatf").textContent;
-        const country = element.getElementsByClassName('css-f2kktt').textContent;
-        const button = element.getElementsByClassName('css-1q1efea')[0].firstElementChild;
-        const urlElement = element.getElementsByClassName('css-1xicsyo')[0]
+        const country = element.querySelector('.css-f2kktt').textContent;
+        const buttonElement = element.querySelector('.css-1q1efea>button');
+        const urlElement = element.querySelector('.css-1xicsyo');
         const url = urlElement.getAttribute('href');
 
-        if (!button.textContent.toLowerCase().includes("start chat")) {
+        if (!buttonElement || !buttonElement.textContent.toLowerCase().includes("start chat")) {
           continue;
         }
+        console.log(urlElement.innerHTML);
+        console.log(country.toLocaleLowerCase())
         if (messageList.includes(urlElement.innerHTML)){
           continue;
         }
@@ -53,7 +55,7 @@ let main = async () => {
     }
   }
 }
-
+console.log("anythin")
 let runApp = () => {
   if (isWorking == false) {
     console.log("started")
@@ -69,6 +71,7 @@ let stopApp = () => {
 }
 
 chrome.storage.local.get(["state"]).then(result => {
+  console.log("Get information on state")
   console.log(result)
   if (result.state == 'working') {
     runApp();
@@ -78,19 +81,10 @@ chrome.storage.local.get(["state"]).then(result => {
   }
 })
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.data == 'start') {
-    runApp();
-  }
-  else {
-    stopApp();
-  }
-  sendResponse({ "response": "nice!" })
-}
-)
-
 chrome.storage.onChanged.addListener((changes, areaName) =>{
-  if (changes.state.newValues == 'working'){
+  console.log("Listener on changed is set")
+  console.log(changes.state)
+  if (changes.state.newValue == 'working'){
     runApp()
   }
   else {
