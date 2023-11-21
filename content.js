@@ -44,7 +44,7 @@ let main = async () => {
             message += "__NOT_CLICKED";
           }
           else{
-            button.click();
+            buttonElement.click();
           }
         }
         urlElement.innerHTML = message;
