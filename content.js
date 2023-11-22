@@ -3,6 +3,20 @@ let messageList = ["LIFETIME", "LIFETIME__NOT_CLICKED", "MONTHLY", "YEARLY", "NO
 let limitNumberOfVisits = 8;
 let pickUpCountryList = ["united states", "canada", "united kingdom", "australia", "new zealand"]
 
+let isCountryAllowed = (country) => {
+  country = country.toLowerCase().trim();
+  if (pickUpCountryList.includes(country)
+    || country.includes("zealand")
+    || (country.includes("united") 
+      && (country.includes("states")
+        || country.includes("kingdom")
+        )
+      )
+    ){
+    return true;
+  }
+}
+
 let main = async () => {
   while (isWorking==true) {
     await new Promise(r => setTimeout(r, 10));
@@ -16,15 +30,14 @@ let main = async () => {
         const urlElement = element.querySelector('.css-1xicsyo');
         const url = urlElement.getAttribute('href');
 
+        
+
         if (!buttonElement || !buttonElement.textContent.toLowerCase().includes("start chat")) {
           continue;
         }
-        console.log(urlElement.innerHTML);
-        console.log(country.toLocaleLowerCase())
         if (messageList.includes(urlElement.innerHTML)){
           continue;
         }
-        console.log(url);
         const response = await fetch("http://127.0.0.1:5000", {
           method: 'POST',
           headers: {
@@ -40,7 +53,7 @@ let main = async () => {
         const data = await response.json();
         let message = data.message;
         if (message === "LIFETIME"){
-          if (numberOfVisits > limitNumberOfVisits || !country.toLowerCase().includes(pickUpCountryList)){
+          if (numberOfVisits > limitNumberOfVisits || !isCountryAllowed(country)){
             message += "__NOT_CLICKED";
           }
           else{
@@ -55,7 +68,7 @@ let main = async () => {
     }
   }
 }
-console.log("anythin")
+
 let runApp = () => {
   if (isWorking == false) {
     console.log("started")
