@@ -57,6 +57,7 @@ let main = async () => {
             message += "__NOT_CLICKED";
           }
           else{
+            await new Promise(r => setTimeout(r, 400));
             buttonElement.click();
           }
         }
