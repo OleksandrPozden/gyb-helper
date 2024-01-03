@@ -22,7 +22,7 @@ let main = async () => {
   while (isWorking==true) {
     await new Promise(r => setTimeout(r, 10));
     try {
-      console.log(rows)
+      const rows = document.querySelectorAll('.css-14wsju2');
       for (let element of rows) {
         const id = element.getAttribute('data-testid');
         const numberOfVisits = element.querySelector(".css-8eaugs .css-plwatf").textContent;
