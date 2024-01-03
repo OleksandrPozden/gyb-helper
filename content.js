@@ -18,20 +18,20 @@ let isCountryAllowed = (country) => {
 }
 
 let main = async () => {
+  console.log("main() was invoked")
   while (isWorking==true) {
     await new Promise(r => setTimeout(r, 10));
     try {
-      const rows = document.querySelectorAll('.css-14wsju2');
+      console.log(rows)
       for (let element of rows) {
         const id = element.getAttribute('data-testid');
         const numberOfVisits = element.querySelector(".css-8eaugs .css-plwatf").textContent;
         const country = element.querySelector('.css-f2kktt').textContent;
-        const buttonElement = element.querySelector('.css-1q1efea>button');
+        const buttonElement = element.querySelector('.css-t49z3a>div>div>button');
         const urlElement = element.querySelector('.css-1xicsyo');
         const url = urlElement.getAttribute('href');
 
         
-
         if (!buttonElement || !buttonElement.textContent.toLowerCase().includes("start chat")) {
           continue;
         }
