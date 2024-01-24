@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "GYB-helper",
-    "version": "0.2.7",
+    "version": "0.2.8",
     "description": "GYB-helper helps to start initiate a chat with customers that bought lifetime subscription.",
     "permissions": [
         "activeTab",

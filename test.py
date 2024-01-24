@@ -10,7 +10,7 @@ with open(TEST_DATA_DIR, 'r') as f:
 number_of_rows = len(soup.select(".css-14wsju2"))
 
 def test_number_of_visits_selector():
-    number_of_visits = soup.select(".css-8eaugs .css-plwatf")
+    number_of_visits = soup.select(".css-1eh3oew .css-plwatf")
     assert number_of_rows == len(number_of_visits)
     for tag in number_of_visits:
         assert tag.name == 'div', f"Tag name is not 'div'. Actual tag name: {tag.name}"
@@ -22,7 +22,8 @@ def test_country_selector():
     assert number_of_rows == len(countries_tags)
     for country_tag in countries_tags:
         assert country_tag.name == 'span', f"Tag name is not 'div'. Actual tag name: {country_tag.name}"
-        assert country_tag.get_text() in all_countries_names, f"Country name is not in the list of countries. Actual country name: {country_tag.get_text()}"
+        print([part.strip() for part in country_tag.get_text().split("\n")])
+        assert " ".join([part.strip() for part in country_tag.get_text().split("\n")]) in all_countries_names, f"Country name is not in the list of countries. Actual country name: {country_tag.get_text()}"
 
 def test_button_selector():
     buttons = soup.select(".css-1q1efea>button")
