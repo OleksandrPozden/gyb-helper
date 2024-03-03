@@ -27,7 +27,7 @@ let main = async () => {
         const id = element.getAttribute('data-testid');
         const numberOfVisits = element.querySelector(".css-1eh3oew .css-plwatf").textContent;
         const country = element.querySelector('.css-f2kktt').textContent;
-        const buttonElement = element.querySelector('.css-t49z3a>div>div>button');
+        const buttonElement = element.querySelector('.css-1hb5p1j>div button');
         const urlElement = element.querySelector('.css-1xicsyo');
         const url = urlElement.getAttribute('href');
 

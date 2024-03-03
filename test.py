@@ -26,7 +26,13 @@ def test_country_selector():
         assert " ".join([part.strip() for part in country_tag.get_text().split("\n")]) in all_countries_names, f"Country name is not in the list of countries. Actual country name: {country_tag.get_text()}"
 
 def test_button_selector():
-    buttons = soup.select(".css-1q1efea>button")
+    rows = soup.select(".css-14wsju2")
+    buttons = []
+    for row in rows:
+        button = row.select_one(".css-1hb5p1j>div button")
+        if button:
+            buttons.append(button)
+    assert buttons != []
     for button in buttons:
         assert button.get_text().strip().lower() in ["start chat", "supervise chat"]
         assert button.name == 'button', f"Tag name is not 'button'. Actual tag name: {button.name}"

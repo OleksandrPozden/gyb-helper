@@ -10,6 +10,10 @@ venv\Scripts\activate
 `
 # Release notes:
 
+## 0.2.9
+    - Fix extension to be working.
+    - Separate extension logic from server logic
+
 ## 0.2.2
     This version of extension is faster and effecient in sense of requests.
     Also other important features that are introduced to users:
