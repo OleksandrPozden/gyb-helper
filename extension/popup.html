@@ -5,46 +5,90 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GYB-helper</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
         body {
             text-align: center;
             margin: 0;
             padding: 0;
         }
         #container {
-            margin-bottom: 5px;
-            min-width: 200px;
+            width: 300px;
+            height: 500px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            border: solid 1px black;
+
+        }
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: solid 1px black;
+            margin-bottom: 20px;
+            min-width: 200px;
+            padding-right: 5%;
+
         }
         #title {
             font-size: 20px;
-            margin-bottom: 20px;
+
         }
         #image {
-            width: 150px;
-            height: 150px;
+            width: 60px;
+            height: 60px;
+
         }
         #clickButton {
             background-color: gray;
             color: white;
-            border: none;
-            padding: 10px 20px;
+            border-radius: 50%;
+            border: 2px dashed;
+            height: 150px;
+            width: 150px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.5s;
+            margin: 15px;
+            
         }
         #clickButton.green {
             background-color: green;
+        }
+        .input-container {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            border: solid 1px rgb(203, 203, 203);
+            min-width: 200px;
+            margin: 5px;
+            padding: 3px;
+            color: rgb(203, 202, 202);
+        }
+        .input-container.active {
+            border: solid 1px black;
+            color: black;
         }
     </style>
 </head>
 <body>
     <div id="container">
-        <div id="title">GYB-helper</div>
-        <img id="image" src="image1.jpg" alt="Image 1">
-        <button id="clickButton">Click Me</button>
+        <header>
+            <img id="image" src="image1.jpg" alt="Image 1">
+            <div id="title">GYB-helper</div>
+        </header>
+        <button id="clickButton">START</button>
+        <div class="input-container">
+            <input type="checkbox" id="checkIsLifetime" disabled/>
+            <label for="checkIsLifetime">Pick up Lifetime</label>
+        </div>
+        <div class="input-container"> 
+            <input type="checkbox" id="checkIsProYearly" disabled/>
+            <label for="checkIsProYearly">Pick up Pro Yearly</label>
+        </div>
+        
     </div>
     <script src="popup.js"></script>
 </body>

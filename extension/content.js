@@ -1,7 +1,11 @@
 let isWorking = false;
-let messageList = ["LIFETIME", "LIFETIME__NOT_CLICKED", "MONTHLY", "YEARLY", "NOTHING"];
+let isLifetime = false;
+let isProYearly = false;
+let messageList = ["LIFETIME", "LIFETIME__NOT_CLICKED", "MONTHLY", "YEARLY", "PRO_YEARLY", "NOTHING"];
 let limitNumberOfVisits = 8;
-let pickUpCountryList = ["united states", "canada", "united kingdom", "australia", "new zealand"]
+let pickUpCountryList = ["united states", "canada", "united kingdom", "australia", "new zealand"];
+let pickUpEmailList = ["bigpond.com", "aol.com", "att.net", "verizon.net", "comcast.net"]
+let pickUpStateList = ["FL", "CA", "CO", "NY", "MA", "WA"]
 
 let isCountryAllowed = (country) => {
   country = country.toLowerCase().trim();
@@ -51,8 +55,14 @@ let main = async () => {
         }
 
         const data = await response.json();
+        console.log(url);
+        console.log(data);
         let message = data.message;
-        if (message === "LIFETIME"){
+        let customerEmail = data.customer_email;
+        let customerAddress = data.address;
+        urlElement.innerHTML = message;
+
+        if (message === "LIFETIME" && isLifetime==true){
           if (numberOfVisits > limitNumberOfVisits || !isCountryAllowed(country)){
             message += "__NOT_CLICKED";
           }
@@ -61,7 +71,15 @@ let main = async () => {
             buttonElement.click();
           }
         }
-        urlElement.innerHTML = message;
+        if (message === "PRO_YEARLY" && isProYearly==true){
+          if (customerAddress.toLowerCase().includes("united states") &&
+              pickUpStateList.includes(customerAddress.substring(0, 2)) &&
+              pickUpEmailList.includes(customerEmail.split("@")[1])
+            ){
+              await new Promise(r => setTimeout(r, 400));
+              buttonElement.click();
+          }
+        }
         
       }
     } catch (error) {
@@ -70,10 +88,12 @@ let main = async () => {
   }
 }
 
-let runApp = () => {
+let runApp = (is_lifetime, is_pro_yearly) => {
   if (isWorking == false) {
     console.log("started")
     isWorking = true
+    isLifetime = is_lifetime
+    isProYearly = is_pro_yearly
     main()
     
   }
@@ -84,11 +104,11 @@ let stopApp = () => {
   isWorking = false
 }
 
-chrome.storage.local.get(["state"]).then(result => {
+chrome.storage.local.get(["state", "is_lifetime", "is_pro_yearly"]).then(result => {
   console.log("Get information on state")
   console.log(result)
   if (result.state == 'working') {
-    runApp();
+    runApp(result.is_lifetime, result.is_pro_yearly);
   }
   else {
     stopApp();
@@ -96,13 +116,20 @@ chrome.storage.local.get(["state"]).then(result => {
 })
 
 chrome.storage.onChanged.addListener((changes, areaName) =>{
-  console.log("Listener on changed is set")
-  console.log(changes.state)
-  if (changes.state.newValue == 'working'){
-    runApp()
+  if (changes.is_lifetime != undefined){
+    console.log(`IsLifetime is ${changes.is_lifetime.newValue}`)
+    isLifetime = changes.is_lifetime.newValue;
   }
-  else {
-    stopApp();
+  else if (changes.is_pro_yearly != undefined){
+    console.log(`IsProYearly is ${changes.is_pro_yearly.newValue}`)
+    isProYearly = changes.is_pro_yearly.newValue;
   }
-}
-)
+  else { 
+    if (changes.state.newValue == 'working'){
+      runApp()
+    }
+    else {
+      stopApp();
+    }
+  }
+});
