@@ -39,14 +39,14 @@ def get_user_info(text):
     result = {}
     soup = BeautifulSoup(text, "lxml")
     table = soup.find('table', class_="Webgood-Billing")
-    address_th_tag = table.find('th', string="Address:")
+    address_th_tag = table.find('th', string="Address:") if table else None
     if address_th_tag:
         address_td_tag = address_th_tag.find_next_sibling('td')
-        result["address"] = address_td_tag.get_text() if address_td_tag else ""
-    email_th_tag = table.find('th', string="Email:")
+        result["address"] = address_td_tag.get_text().strip() if address_td_tag else ""
+    email_th_tag = table.find('th', string="Email:") if table else None
     if email_th_tag:
         email_td_tag = email_th_tag.find_next_sibling('td')
-        result["customer_email"] = email_td_tag.get_text() if email_td_tag else ""
+        result["customer_email"] = email_td_tag.get_text().strip() if email_td_tag else ""
     return result
 
 def remove_link_and_script_tags(content):
