@@ -7,6 +7,8 @@
     <style>
         * {
             box-sizing: border-box;
+            padding: 0;
+            margin: 0;
         }
         body {
             text-align: center;
@@ -66,23 +68,48 @@
             justify-content: flex-start;
             align-items: center;
             border: solid 1px rgb(203, 203, 203);
-            min-width: 200px;
+            width: 200px;
             margin: 5px;
-            padding: 3px;
+            padding: 5px;
             color: rgb(203, 202, 202);
         }
         .input-container.active {
-            border: solid px black;
+            border: solid 1px black;
             color: black;
+        }
+        .input-container input{
+            max-width: 30%;
         }
         .input-container label{
             width: 100%;
             text-align: left;
+            margin-left: 5px;
+        }
+        .input-container.limit-chats{
+            padding: 15px;
+            justify-content: space-around;
+        }
+        .input-container.limit-chats input{
+            width: 60px;
+            height: 30px;
+            text-align: center;
+        }
+        #submitLimitChats.active{
+            color: white;
+            background-color: rgb(60, 132, 205);
+            border-color: rgb(60, 132, 205);
+        }
+        #submitLimitChats{
+            height: 30px;
+            width: 50px;
+        }
+        #limitChats {
+            color: inherit;
         }
     </style>
 </head>
 <body>
-    <div id="container" class="green">
+    <div id="container">
         <header>
             <img id="image" src="image1.jpg" alt="Image 1">
             <div id="title">GYB-helper</div>
@@ -96,6 +123,11 @@
             <input type="checkbox" id="checkIsProYearly" disabled/>
             <label for="checkIsProYearly">Pick up Pro Yearly</label>
         </div>
+        <!-- <fieldset class="input-container limit-chats">
+            <legend>Max. Chats</legend>
+            <input type="number" id="limitChats" min="0" max="10" value="4" disabled>
+            <button id="submitLimitChats" disabled>SAVE</button>
+        </fieldset> -->
         
     </div>
     <script src="popup.js"></script>

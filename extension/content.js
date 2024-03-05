@@ -27,6 +27,9 @@ let main = async () => {
     await new Promise(r => setTimeout(r, 10));
     try {
       const rows = document.querySelectorAll('.css-14wsju2');
+      // const nameElements = document.getElementsByClassName("css-1nv9oho");
+      // const names = Array.from(nameElements).filter(el => el.innerHTML === 'Oscar').map(el => el.innerHTML);
+      // const activeSessions = names.length
       for (let element of rows) {
         const id = element.getAttribute('data-testid');
         const numberOfVisits = element.querySelector(".css-1eh3oew .css-plwatf").textContent;
