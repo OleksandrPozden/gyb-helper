@@ -74,7 +74,8 @@ let main = async () => {
         if (message === "PRO_YEARLY" && isProYearly==true){
           if (customerAddress.toLowerCase().includes("united states") &&
               pickUpStateList.includes(customerAddress.substring(0, 2)) &&
-              pickUpEmailList.includes(customerEmail.split("@")[1])
+              pickUpEmailList.includes(customerEmail.split("@")[1]) &&
+              numberOfVisits < limitNumberOfVisits
             ){
               await new Promise(r => setTimeout(r, 400));
               buttonElement.click();
