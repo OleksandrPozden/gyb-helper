@@ -1,6 +1,7 @@
 
 const imageElement = document.getElementById('image');
 const buttonElement = document.getElementById('clickButton');
+const containerElement = document.getElementById('container');
 const checkIsLifetime = document.getElementById('checkIsLifetime');
 const checkIsProYearly = document.getElementById('checkIsProYearly');
 
@@ -8,6 +9,7 @@ let stateWork = (is_lifetime, is_pro_yearly) => {
     imageElement.src = 'image2.jpg';
     buttonElement.classList.add('green');
     buttonElement.textContent = 'Working';
+    containerElement.classList.add('green');
     checkIsLifetime.disabled = false;
     checkIsLifetime.checked = is_lifetime;
     checkIsLifetime.parentElement.classList.add('active');
@@ -19,6 +21,7 @@ let stateStop = (is_lifetime, is_pro_yearly) => {
     imageElement.src = 'image1.jpg';
     buttonElement.classList.remove('green');
     buttonElement.textContent = 'START';
+    containerElement.classList.remove('green');
     checkIsLifetime.disabled = true;
     checkIsLifetime.checked = is_lifetime;
     checkIsLifetime.parentElement.classList.remove('active');

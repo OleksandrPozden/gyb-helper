@@ -13,6 +13,7 @@ venv\Scripts\activate
 ## 0.3.0
     - Add Pro Yearly as a new type
     - Use switcher to pick up separetely Lifetim and Pro Yearly
+    - Update web-UI. Add new layout
 
 ## 0.2.9
     - Fix extension to be working.
