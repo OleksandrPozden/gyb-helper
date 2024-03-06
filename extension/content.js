@@ -1,6 +1,7 @@
 let isWorking = false;
 let isLifetime = false;
 let isProYearly = false;
+let limitChats = 4;
 let messageList = ["LIFETIME", "LIFETIME__NOT_CLICKED", "MONTHLY", "YEARLY", "PRO_YEARLY", "NOTHING"];
 let limitNumberOfVisits = 8;
 let pickUpCountryList = ["united states", "canada", "united kingdom", "australia", "new zealand"];
@@ -27,9 +28,12 @@ let main = async () => {
     await new Promise(r => setTimeout(r, 10));
     try {
       const rows = document.querySelectorAll('.css-14wsju2');
-      // const nameElements = document.getElementsByClassName("css-1nv9oho");
-      // const names = Array.from(nameElements).filter(el => el.innerHTML === 'Oscar').map(el => el.innerHTML);
-      // const activeSessions = names.length
+      const nameElements = document.getElementsByClassName("css-1nv9oho");
+      const names = Array.from(nameElements).filter(el => el.innerHTML === 'Oscar').map(el => el.innerHTML);
+      let activeSessions = names.length
+      
+      console.log(activeSessions);
+      console.log(limitChats);
       for (let element of rows) {
         const id = element.getAttribute('data-testid');
         const numberOfVisits = element.querySelector(".css-1eh3oew .css-plwatf").textContent;
@@ -58,19 +62,26 @@ let main = async () => {
         }
 
         const data = await response.json();
-        console.log(url);
         console.log(data);
         let message = data.message;
         let customerEmail = data.customer_email;
         let customerAddress = data.address;
         urlElement.innerHTML = message;
 
+        if (activeSessions >= limitChats){
+          console.log("activeSessions >= limitChats")
+          continue;
+        }
+        chatting = element.querySelector(".css-1nv9oho");
         if (message === "LIFETIME" && isLifetime==true){
           if (numberOfVisits > limitNumberOfVisits || !isCountryAllowed(country)){
             message += "__NOT_CLICKED";
           }
           else{
+            console.log("clicked");
             await new Promise(r => setTimeout(r, 400));
+            activeSessions += 1;
+            chatting.innerHTML = 'Oscar'
             buttonElement.click();
           }
         }
@@ -80,7 +91,10 @@ let main = async () => {
               pickUpEmailList.includes(customerEmail.split("@")[1]) &&
               numberOfVisits < limitNumberOfVisits
             ){
+              console.log("clicked");
               await new Promise(r => setTimeout(r, 400));
+              activeSessions += 1;
+              chatting.innerHTML = 'Oscar'
               buttonElement.click();
           }
         }
@@ -92,12 +106,13 @@ let main = async () => {
   }
 }
 
-let runApp = (is_lifetime, is_pro_yearly) => {
+let runApp = (is_lifetime, is_pro_yearly, limit_chats) => {
   if (isWorking == false) {
     console.log("started")
     isWorking = true
     isLifetime = is_lifetime
     isProYearly = is_pro_yearly
+    limitChats = limit_chats
     main()
     
   }
@@ -112,7 +127,7 @@ chrome.storage.local.get(["state", "is_lifetime", "is_pro_yearly"]).then(result 
   console.log("Get information on state")
   console.log(result)
   if (result.state == 'working') {
-    runApp(result.is_lifetime, result.is_pro_yearly);
+    runApp(result.is_lifetime, result.is_pro_yearly, result.limit_chats);
   }
   else {
     stopApp();
@@ -128,9 +143,15 @@ chrome.storage.onChanged.addListener((changes, areaName) =>{
     console.log(`IsProYearly is ${changes.is_pro_yearly.newValue}`)
     isProYearly = changes.is_pro_yearly.newValue;
   }
+  else if (changes.limit_chats != undefined){
+    console.log(`LimitChats is ${changes.limit_chats.newValue}`)
+    limitChats = changes.limit_chats.newValue;
+  }
   else { 
     if (changes.state.newValue == 'working'){
-      runApp()
+      chrome.storage.local.get(["is_lifetime", "is_pro_yearly"]).then(result => {
+        runApp(result.is_lifetime, result.is_pro_yearly);
+      });
     }
     else {
       stopApp();
