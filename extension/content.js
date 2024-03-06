@@ -34,6 +34,8 @@ let main = async () => {
       
       console.log(activeSessions);
       console.log(limitChats);
+      console.log(isLifetime);
+      console.log(isProYearly);
       for (let element of rows) {
         const id = element.getAttribute('data-testid');
         const numberOfVisits = element.querySelector(".css-1eh3oew .css-plwatf").textContent;
@@ -81,7 +83,8 @@ let main = async () => {
             console.log("clicked");
             await new Promise(r => setTimeout(r, 400));
             activeSessions += 1;
-            chatting.innerHTML = 'Oscar'
+            element.parentElement.style.backgroundColor = "#6cf8a2";
+            //chatting.innerHTML = 'Oscar'
             buttonElement.click();
           }
         }
@@ -94,7 +97,8 @@ let main = async () => {
               console.log("clicked");
               await new Promise(r => setTimeout(r, 400));
               activeSessions += 1;
-              chatting.innerHTML = 'Oscar'
+              element.parentElement.style.backgroundColor = "#6cf8a2";
+              //chatting.innerHTML = 'Oscar'
               buttonElement.click();
           }
         }
@@ -112,7 +116,7 @@ let runApp = (is_lifetime, is_pro_yearly, limit_chats) => {
     isWorking = true
     isLifetime = is_lifetime
     isProYearly = is_pro_yearly
-    limitChats = limit_chats
+    limitChats = limit_chats || 4
     main()
     
   }
@@ -149,8 +153,8 @@ chrome.storage.onChanged.addListener((changes, areaName) =>{
   }
   else { 
     if (changes.state.newValue == 'working'){
-      chrome.storage.local.get(["is_lifetime", "is_pro_yearly"]).then(result => {
-        runApp(result.is_lifetime, result.is_pro_yearly);
+      chrome.storage.local.get(["is_lifetime", "is_pro_yearly", "limit_chats"]).then(result => {
+        runApp(result.is_lifetime, result.is_pro_yearly, result.limit_chats);
       });
     }
     else {
