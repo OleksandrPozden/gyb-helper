@@ -31,7 +31,7 @@ let main = async () => {
       const nameElements = document.getElementsByClassName("css-1nv9oho");
       const names = Array.from(nameElements).filter(el => el.innerHTML === 'Oscar').map(el => el.innerHTML);
       let activeSessions = names.length
-      
+
       for (let element of rows) {
         const id = element.getAttribute('data-testid');
         const numberOfVisits = element.querySelector(".css-1eh3oew .css-plwatf").textContent;
@@ -67,7 +67,7 @@ let main = async () => {
         let customerAddress = data.address;
         let orderID = data.order_id;
         urlElement.innerHTML = message;
-        placeForOrderId.innerHTML = orderID;
+        placeForOrderId.parentElement.innerHTML = orderID;
 
         if (activeSessions >= limitChats){
           console.log("activeSessions >= limitChats")
