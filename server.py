@@ -47,6 +47,10 @@ def get_user_info(text):
     if email_th_tag:
         email_td_tag = email_th_tag.find_next_sibling('td')
         result["customer_email"] = email_td_tag.get_text().strip() if email_td_tag else ""
+    order_id_th_tag = table.find('th', string="Order ID:") if table else None
+    if order_id_th_tag:
+        order_id_td_tag = order_id_th_tag.find_next_sibling('td')
+        result["order_id"] = order_id_td_tag.get_text().strip() if order_id_td_tag else ""
     return result
 
 def remove_link_and_script_tags(content):
@@ -82,7 +86,8 @@ def check_url():
     data = {
         "message": get_subscription(remove_link_and_script_tags(r.text)),
         "customer_email": user_info.get("customer_email", ""),
-        "address": user_info.get("address", "")
+        "address": user_info.get("address", ""),
+        "order_id": user_info.get("order_id", "")
     }
     cache[url] = data
     count(data["message"], url)

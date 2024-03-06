@@ -32,10 +32,6 @@ let main = async () => {
       const names = Array.from(nameElements).filter(el => el.innerHTML === 'Oscar').map(el => el.innerHTML);
       let activeSessions = names.length
       
-      console.log(activeSessions);
-      console.log(limitChats);
-      console.log(isLifetime);
-      console.log(isProYearly);
       for (let element of rows) {
         const id = element.getAttribute('data-testid');
         const numberOfVisits = element.querySelector(".css-1eh3oew .css-plwatf").textContent;
@@ -43,6 +39,7 @@ let main = async () => {
         const buttonElement = element.querySelector('.css-1hb5p1j>div button');
         const urlElement = element.querySelector('.css-1xicsyo');
         const url = urlElement.getAttribute('href');
+        const placeForOrderId = element.querySelector('.css-yuv2pa');
 
         
         if (!buttonElement || !buttonElement.textContent.toLowerCase().includes("start chat")) {
@@ -68,7 +65,9 @@ let main = async () => {
         let message = data.message;
         let customerEmail = data.customer_email;
         let customerAddress = data.address;
+        let orderID = data.order_id;
         urlElement.innerHTML = message;
+        placeForOrderId.innerHTML = orderID;
 
         if (activeSessions >= limitChats){
           console.log("activeSessions >= limitChats")
