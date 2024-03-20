@@ -41,11 +41,16 @@ let main = async () => {
         const url = urlElement.getAttribute('href');
         const placeForOrderId = element.querySelector('.css-yuv2pa');
 
+        console.log(urlElement.innerHTML);
         
         if (!buttonElement || !buttonElement.textContent.toLowerCase().includes("start chat")) {
+          console.log(urlElement);
+          console.log(urlElement.innerHTML);
           continue;
         }
         if (messageList.includes(urlElement.innerHTML)){
+          console.log("IS lifetime equal to LIFETIME");
+          console.log(urlElement.innerHTML=='LIFETIME');
           continue;
         }
         const response = await fetch("http://127.0.0.1:5000", {
