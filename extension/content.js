@@ -1,8 +1,9 @@
 let isWorking = false;
 let isLifetime = false;
 let isProYearly = false;
+let isJpLifetime = false;
 let limitChats = 4;
-let messageList = ["LIFETIME", "LIFETIME__NOT_CLICKED", "MONTHLY", "YEARLY", "PRO_YEARLY", "NOTHING"];
+let messageList = ["LIFETIME", "LIFETIME__NOT_CLICKED", "MONTHLY", "YEARLY", "PRO_YEARLY", "JP-LIFETIME", "NOTHING"];
 let limitNumberOfVisits = 8;
 let pickUpCountryList = ["united states", "canada", "united kingdom", "australia", "new zealand"];
 let pickUpEmailList = ["bigpond.com", "aol.com", "att.net", "verizon.net", "comcast.net"]
@@ -40,19 +41,16 @@ let main = async () => {
         const urlElement = element.querySelector('.css-1xicsyo');
         const url = urlElement.getAttribute('href');
         const placeForOrderId = element.querySelector('.css-yuv2pa');
-
-        console.log(urlElement.innerHTML);
         
         if (!buttonElement || !buttonElement.textContent.toLowerCase().includes("start chat")) {
-          console.log(urlElement);
-          console.log(urlElement.innerHTML);
           continue;
         }
         if (messageList.includes(urlElement.innerHTML)){
-          console.log("IS lifetime equal to LIFETIME");
-          console.log(urlElement.innerHTML=='LIFETIME');
           continue;
         }
+        console.log(buttonElement.textContent.toLowerCase());
+        console.log(urlElement.innerHTML);
+        console.log(activeSessions);
         const response = await fetch("http://127.0.0.1:5000", {
           method: 'POST',
           headers: {
@@ -66,7 +64,6 @@ let main = async () => {
         }
 
         const data = await response.json();
-        console.log(data);
         let message = data.message;
         let customerEmail = data.customer_email;
         let customerAddress = data.address;
@@ -106,6 +103,16 @@ let main = async () => {
               buttonElement.click();
           }
         }
+        if (message === "JP-LIFETIME" && isJpLifetime==true){
+          if (numberOfVisits < limitNumberOfVisits){
+              console.log("clicked jp-lifetime");
+              await new Promise(r => setTimeout(r, 400));
+              activeSessions += 1;
+              element.parentElement.style.backgroundColor = "#6cf8a2";
+              //chatting.innerHTML = 'Oscar'
+              buttonElement.click();
+          }
+        }
         
       }
     } catch (error) {
@@ -114,11 +121,12 @@ let main = async () => {
   }
 }
 
-let runApp = (is_lifetime, is_pro_yearly, limit_chats) => {
+let runApp = (is_lifetime, is_pro_yearly, is_jp_lifetime, limit_chats) => {
   if (isWorking == false) {
     console.log("started")
     isWorking = true
     isLifetime = is_lifetime
+    isJpLifetime = is_jp_lifetime
     isProYearly = is_pro_yearly
     limitChats = limit_chats || 4
     main()
@@ -131,11 +139,11 @@ let stopApp = () => {
   isWorking = false
 }
 
-chrome.storage.local.get(["state", "is_lifetime", "is_pro_yearly"]).then(result => {
+chrome.storage.local.get(["state", "is_lifetime", "is_jp_lifetime", "is_pro_yearly"]).then(result => {
   console.log("Get information on state")
   console.log(result)
   if (result.state == 'working') {
-    runApp(result.is_lifetime, result.is_pro_yearly, result.limit_chats);
+    runApp(result.is_lifetime, result.is_pro_yearly, result.is_jp_lifetime, result.limit_chats);
   }
   else {
     stopApp();
@@ -151,14 +159,18 @@ chrome.storage.onChanged.addListener((changes, areaName) =>{
     console.log(`IsProYearly is ${changes.is_pro_yearly.newValue}`)
     isProYearly = changes.is_pro_yearly.newValue;
   }
+  else if (changes.is_jp_lifetime != undefined){
+    console.log(`IsJpLifetime is ${changes.is_jp_lifetime.newValue}`)
+    isJpLifetime = changes.is_jp_lifetime.newValue;
+  }
   else if (changes.limit_chats != undefined){
     console.log(`LimitChats is ${changes.limit_chats.newValue}`)
     limitChats = changes.limit_chats.newValue;
   }
   else { 
     if (changes.state.newValue == 'working'){
-      chrome.storage.local.get(["is_lifetime", "is_pro_yearly", "limit_chats"]).then(result => {
-        runApp(result.is_lifetime, result.is_pro_yearly, result.limit_chats);
+      chrome.storage.local.get(["is_lifetime", "is_pro_yearly", "is_jp_lifetime","limit_chats"]).then(result => {
+        runApp(result.is_lifetime, result.is_pro_yearly, result.is_jp_lifetime, result.limit_chats);
       });
     }
     else {

@@ -33,6 +33,8 @@ def get_subscription(text):
         return "YEARLY"
     if "month" in text:
         return "MONTHLY"
+    if "ライフタイムライセンス" in text:
+        return "JP-LIFETIME"
     return "NOTHING"
 
 def get_user_info(text):
