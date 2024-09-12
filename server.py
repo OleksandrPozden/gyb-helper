@@ -95,5 +95,12 @@ def check_url():
     count(data["message"], url)
     return jsonify(data)
 
+@app.route('/v1', methods=["POST"])
+def check_url_v1():
+    data = {
+        "response": "ok"
+    }
+    return jsonify(data)
+
 if __name__ == '__main__':
     app.run(debug=True)

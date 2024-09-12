@@ -28,7 +28,7 @@ let main = async () => {
   while (isWorking==true) {
     await new Promise(r => setTimeout(r, 10));
     try {
-      const rows = document.querySelectorAll('.css-14wsju2');
+      const rows = document.querySelectorAll('.css-1vd7r1n');
       const nameElements = document.getElementsByClassName("css-1nv9oho");
       const names = Array.from(nameElements).filter(el => el.innerHTML === 'Oscar').map(el => el.innerHTML);
       let activeSessions = names.length
