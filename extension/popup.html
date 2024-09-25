@@ -5,46 +5,176 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GYB-helper</title>
     <style>
+        * {
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+        }
         body {
             text-align: center;
             margin: 0;
             padding: 0;
         }
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
         #container {
-            margin-bottom: 5px;
-            min-width: 200px;
+            width: 250px;
+            height: 300px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            border: solid 1px black;
+            transition: border 0.4s;
+        }
+        #container.green{
+            /* border: solid 3px green; */
+            background: linear-gradient(-45deg,#fff6b9, #fffbbc);
+            /**/
+        }
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: solid 1px black;
+            border-bottom: none;
+            min-width: 200px;
+            padding-right: 5%;
+
         }
         #title {
             font-size: 20px;
-            margin-bottom: 20px;
+
         }
         #image {
-            width: 150px;
-            height: 150px;
+            width: 50px;
+            height: 50px;
+
         }
         #clickButton {
             background-color: gray;
+            background-color: rgb(62, 151, 239);
             color: white;
             border: none;
-            padding: 10px 20px;
+            border-radius: 5%;
+            height: 80px;
+            width: 150px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.5s;
+            margin: 15px;
+            margin-top: 0;
+            
+        }
+        #clickButton:hover{
+            box-shadow: 0px 0px 12px 4px rgb(0 0 0 / 20%);
         }
         #clickButton.green {
-            background-color: green;
+            /*background-color: green;*/
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #2e57dc, #128fc9);
+            background-size: 200% 200%;
+            color: black;
+            animation: gradient 10s ease infinite;
+        }
+        .input-container {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            border: solid 1px rgb(203, 203, 203);
+            width: 200px;
+            margin: 5px;
+            padding: 5px;
+            color: rgb(203, 202, 202);
+        }
+        .input-container.active {
+            border: solid 1px black;
+            color: black;
+        }
+        .input-container.active label:hover{
+            cursor: grab;
+        }
+        .input-container input[type="checkbox"]{
+            max-width: 30%;
+        }
+        .input-container label{
+            width: 100%;
+            text-align: left;
+            margin-left: 5px;
+        }
+        .input-container.limit-chats{
+            display: block;
+        }
+        .input-container.limit-chats label{
+            margin-left: 0;
+            margin-bottom: 5px;
+            display: block;
+        } 
+        #submitLimitChats.active{
+            color: black;
+            border: none;
+            background-color: #e73c7e;
+        }
+        #submitLimitChats.active:hover{
+            box-shadow: 0px 0px 8px 2px rgb(0 0 0 / 20%);
+            cursor: grab;
+            background-color: rgb(143, 199, 255);
+
+        }
+        #submitLimitChats.active:active{
+            transform: scale(0.9);
+        }
+        #submitLimitChats{
+            border-radius: 0 10% 10% 0;
+            float: left;
+            height: 30px;
+            width: 30%;
+        }
+        #limitChats {
+            float: left;
+            color: inherit;
+            width: 70%;
+            height: 30px;
+            text-align: center;
+        }
+        #info-banner{
+            display: none;
         }
     </style>
 </head>
 <body>
-    <div id="container">
-        <div id="title">GYB-helper</div>
+    <header>
         <img id="image" src="image1.jpg" alt="Image 1">
-        <button id="clickButton">Click Me</button>
+        <div id="title">GYB-helper</div>
+    </header>
+    <div id="container">
+        <button id="clickButton">START</button>
+        <div class="input-container">
+            <input type="checkbox" id="checkIsLifetime" disabled/>
+            <label for="checkIsLifetime">Pick up Lifetime</label>
+        </div>
+        <div class="input-container"> 
+            <input type="checkbox" id="checkIsJpLifetime" disabled/>
+            <label for="checkIsJpLifetime">Pick up JP Lifetime</label>
+        </div>
+        <div class="input-container"> 
+            <input type="checkbox" id="checkIsProYearly" disabled/>
+            <label for="checkIsProYearly">Pick up Pro Yearly</label>
+        </div>
+        <div class="input-container limit-chats">
+            <label for="limitChats">Max. chats:</label>
+            <input type="number" id="limitChats" min="0" max="10" value="4" disabled>
+            <button id="submitLimitChats"  class="active" disabled>Save</button>
+        </div>
+        <span id="info-banner">New limit is saved!</span>
+        
     </div>
     <script src="popup.js"></script>
 </body>

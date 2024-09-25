@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "GYB-helper",
-    "version": "0.2.9",
+    "version": "0.3.2",
     "description": "GYB-helper helps to start initiate a chat with customers that bought lifetime subscription.",
     "permissions": [
         "activeTab",
@@ -12,11 +12,12 @@
     "action": {
         "default_title": "gyb-helper",
         "default_popup": "popup.html",
-        "default_icon": {
-            "16": "image1.jpg",
-            "48": "image1.jpg",
-            "128": "image1.jpg"
-        }
+        "default_icon": "icon_128.png"
+    },
+    "icons":{
+        "16": "icon_16.png",
+        "48": "icon_48.png",
+        "128": "icon_128.png"
     },
     "background": {
         "service_worker": "background.js"
