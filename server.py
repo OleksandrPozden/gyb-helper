@@ -25,6 +25,8 @@ def count(result, url):
 
 def get_subscription(text):
     pro_yearly = re.compile(r'<h5>.*?pro module.*?year.*?</h5>', re.DOTALL)
+    if "pro+ocr (promo)" in text:
+        return "PRO+OCR_PROMO"
     if "lifetime" in text:
         return "LIFETIME"
     if pro_yearly.search(text):
@@ -35,6 +37,14 @@ def get_subscription(text):
         return "MONTHLY"
     if "ライフタイムライセンス" in text:
         return "JP-LIFETIME"
+    return "NOTHING"
+
+def get_subscription_v2(text):
+    text=text.lower()
+    if "pro+ocr (promo)" in text:
+        return "PRO+OCR_PROMO"
+    if "promo" in text:
+        return "PROMO"
     return "NOTHING"
 
 def get_user_info(text):
@@ -95,8 +105,8 @@ def check_url():
     count(data["message"], url)
     return jsonify(data)
 
-@app.route('/v1', methods=["POST"])
-def check_url_v1():
+@app.route('/v2', methods=["POST"])
+def check_url_v2():
     data = {
         "response": "ok"
     }
