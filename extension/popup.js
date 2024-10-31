@@ -12,6 +12,7 @@ const infoBannerLimitChat = document.getElementById('info-banner-limit-chat');
 const inputTimeDelay = document.getElementById('timeDelay');
 const buttonSubmitTimeDelay = document.getElementById('submitTimeDelay');
 const infoBannerTimeDelay = document.getElementById('info-banner-time-delay');
+const labelActiveSessions = document.getElementById('activeSessions');
 
 let stateWork = (is_lifetime, is_pro_yearly, is_jp_lifetime, is_pro_ocr, limit_chats, time_delay) => {
     imageElement.src = 'image2.jpg';
@@ -40,6 +41,7 @@ let stateWork = (is_lifetime, is_pro_yearly, is_jp_lifetime, is_pro_ocr, limit_c
     buttonSubmitTimeDelay.disabled = false;
     buttonSubmitTimeDelay.classList.add('active');
     inputTimeDelay.parentElement.classList.add('active');
+    labelActiveSessions.classList.add('active');
 
 }
 let stateStop = (is_lifetime, is_pro_yearly, is_jp_lifetime, is_pro_ocr, limit_chats, time_delay) => {
@@ -69,10 +71,13 @@ let stateStop = (is_lifetime, is_pro_yearly, is_jp_lifetime, is_pro_ocr, limit_c
     buttonSubmitTimeDelay.disabled = true;
     buttonSubmitTimeDelay.classList.remove('active');
     inputTimeDelay.parentElement.classList.remove('active');
+    labelActiveSessions.classList.remove('active');
 }
 chrome.storage.local.get(["state","is_lifetime", "is_pro_yearly", "is_jp_lifetime", "is_pro_ocr", "limit_chats", "time_delay"]).then((result) => {
+    console.log(result)
     result.limit_chats = result.limit_chats || 4;
-    result.time_delay = result.time_delay || 400
+    result.time_delay = result.time_delay || 400;
+    console.log(result)
     console.debug(result)
     if (result.state == "working"){
         stateWork(result.is_lifetime, result.is_pro_yearly, result.is_jp_lifetime, result.is_pro_ocr, result.limit_chats, result.time_delay)
@@ -168,3 +173,10 @@ buttonSubmitTimeDelay.addEventListener('click', () => {
         infoBannerTimeDelay.style.display = 'none'; // Hide the element after 3000ms
     }, 2000);
 });
+
+chrome.storage.onChanged.addListener((changes, areaName) =>{
+    if (changes.active_sessions != undefined){
+      console.log(`Update active sessions on popup page`)
+      labelActiveSessions.innerHTML = `Processing chats: <b>${changes.active_sessions.newValue}</b>`
+    }
+  });

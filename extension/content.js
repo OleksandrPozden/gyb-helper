@@ -1,3 +1,15 @@
+let numberOfActiveSessionsHandler = {
+  set: function(target, key, value) {
+      console.log('it worked')
+      if (key === 'value' && target[key] !== value) { 
+          target[key] = value;
+          chrome.storage.local.set({ active_sessions: value });
+          console.log(`Updated active_sessions in chrome.storage: ${value}`);
+      }
+      return true;
+  }
+};
+
 let isWorking = false;
 let isLifetime = false;
 let isProYearly = false;
@@ -5,6 +17,7 @@ let isJpLifetime = false;
 let IsProOCRPromo = false;
 let limitChats = 4;
 let timeDelay = 2000;
+let activeSessions = new Proxy({ value: 0 }, numberOfActiveSessionsHandler);
 let messageList = ["LIFETIME", "LIFETIME__NOT_CLICKED", "MONTHLY", "YEARLY", "PRO_YEARLY", "JP-LIFETIME", "NOTHING","PRO+OCR_PROMO"];
 let limitNumberOfVisits = 3;
 let pickUpCountryList = ["united states", "canada", "united kingdom", "australia", "new zealand"];
@@ -33,7 +46,7 @@ let main = async () => {
       const rows = document.querySelectorAll('.css-14wsju2');
       const nameElements = document.getElementsByClassName("css-1nv9oho");
       const names = Array.from(nameElements).filter(el => el.innerHTML === 'Oscar' || el.innerHTML === 'Anna').map(el => el.innerHTML);
-      let activeSessions = names.length
+      activeSessions.value = names.length
 
       for (let element of rows) {
         const id = element.getAttribute('data-testid');
@@ -52,7 +65,6 @@ let main = async () => {
         }
         console.log(buttonElement.textContent.toLowerCase());
         console.log(urlElement.innerHTML);
-        console.log(activeSessions);
         const response = await fetch("http://127.0.0.1:5000", {
           method: 'POST',
           headers: {
@@ -73,7 +85,7 @@ let main = async () => {
         urlElement.innerHTML = message;
         placeForOrderId.parentElement.innerHTML = orderID;
 
-        if (activeSessions >= limitChats){
+        if (activeSessions.value >= limitChats){
           console.log("activeSessions >= limitChats")
           continue;
         }
@@ -85,7 +97,7 @@ let main = async () => {
           else{
             await new Promise(r => setTimeout(r, timeDelay));
             console.log("clicked");
-            activeSessions += 1;
+            activeSessions.value += 1;
             element.parentElement.style.backgroundColor = "#6cf8a2";
             buttonElement.click();
           }
@@ -98,7 +110,7 @@ let main = async () => {
             ){
               await new Promise(r => setTimeout(r, timeDelay));
               console.log("clicked");
-              activeSessions += 1;
+              activeSessions.value += 1;
               element.parentElement.style.backgroundColor = "#6cf8a2";
               buttonElement.click();
           }
@@ -107,7 +119,7 @@ let main = async () => {
           if (numberOfVisits < limitNumberOfVisits){
               await new Promise(r => setTimeout(r, timeDelay));
               console.log("clicked jp-lifetime");
-              activeSessions += 1;
+              activeSessions.value += 1;
               element.parentElement.style.backgroundColor = "#6cf8a2";
               buttonElement.click();
           }
@@ -116,7 +128,7 @@ let main = async () => {
           if (numberOfVisits < limitNumberOfVisits){
               await new Promise(r => setTimeout(r, timeDelay));
               console.log("clicked pro+ocr (promo)");
-              activeSessions += 1;
+              activeSessions.value += 1;
               element.parentElement.style.backgroundColor = "#6cf8a2";
               buttonElement.click();
           }
