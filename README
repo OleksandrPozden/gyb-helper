@@ -10,6 +10,13 @@ venv\Scripts\activate
 `
 # Release notes:
 
+## 0.4.2
+    - Dynamically change time delay
+
+## 0.4.0
+    - Add support for JP chats
+    - Add support for OCR chats
+
 ## 0.3.0
     - Add Pro Yearly as a new type
     - Use switcher to pick up separetely Lifetim and Pro Yearly

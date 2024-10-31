@@ -8,9 +8,12 @@ const checkIsProOCRPromo = document.getElementById('checkIsProOCRPromo');
 const checkIsProYearly = document.getElementById('checkIsProYearly');
 const inputLimitChats = document.getElementById('limitChats');
 const buttonSubmitLimitChats = document.getElementById('submitLimitChats');
-const infoBanner = document.getElementById('info-banner');
+const infoBannerLimitChat = document.getElementById('info-banner-limit-chat');
+const inputTimeDelay = document.getElementById('timeDelay');
+const buttonSubmitTimeDelay = document.getElementById('submitTimeDelay');
+const infoBannerTimeDelay = document.getElementById('info-banner-time-delay');
 
-let stateWork = (is_lifetime, is_pro_yearly, is_jp_lifetime, is_pro_ocr, limit_chats) => {
+let stateWork = (is_lifetime, is_pro_yearly, is_jp_lifetime, is_pro_ocr, limit_chats, time_delay) => {
     imageElement.src = 'image2.jpg';
     buttonElement.classList.add('green');
     buttonElement.textContent = 'Working';
@@ -32,9 +35,14 @@ let stateWork = (is_lifetime, is_pro_yearly, is_jp_lifetime, is_pro_ocr, limit_c
     buttonSubmitLimitChats.disabled = false;
     buttonSubmitLimitChats.classList.add('active');
     inputLimitChats.parentElement.classList.add('active');
+    inputTimeDelay.disabled = false;
+    inputTimeDelay.value = time_delay;
+    buttonSubmitTimeDelay.disabled = false;
+    buttonSubmitTimeDelay.classList.add('active');
+    inputTimeDelay.parentElement.classList.add('active');
 
 }
-let stateStop = (is_lifetime, is_pro_yearly, is_jp_lifetime, is_pro_ocr, limit_chats) => {
+let stateStop = (is_lifetime, is_pro_yearly, is_jp_lifetime, is_pro_ocr, limit_chats, time_delay) => {
     imageElement.src = 'image1.jpg';
     buttonElement.classList.remove('green');
     buttonElement.textContent = 'START';
@@ -56,28 +64,34 @@ let stateStop = (is_lifetime, is_pro_yearly, is_jp_lifetime, is_pro_ocr, limit_c
     buttonSubmitLimitChats.disabled = true;
     buttonSubmitLimitChats.classList.remove('active');
     inputLimitChats.parentElement.classList.remove('active');
+    inputTimeDelay.disabled = true;
+    inputTimeDelay.value = time_delay;
+    buttonSubmitTimeDelay.disabled = true;
+    buttonSubmitTimeDelay.classList.remove('active');
+    inputTimeDelay.parentElement.classList.remove('active');
 }
-chrome.storage.local.get(["state","is_lifetime", "is_pro_yearly", "is_jp_lifetime", "is_pro_ocr", "limit_chats"]).then((result) => {
+chrome.storage.local.get(["state","is_lifetime", "is_pro_yearly", "is_jp_lifetime", "is_pro_ocr", "limit_chats", "time_delay"]).then((result) => {
     result.limit_chats = result.limit_chats || 4;
+    result.time_delay = result.time_delay || 400
     console.debug(result)
     if (result.state == "working"){
-        stateWork(result.is_lifetime, result.is_pro_yearly, result.is_jp_lifetime, result.is_pro_ocr, result.limit_chats)
+        stateWork(result.is_lifetime, result.is_pro_yearly, result.is_jp_lifetime, result.is_pro_ocr, result.limit_chats, result.time_delay)
     }
     else{
-        stateStop(result.is_lifetime, result.is_pro_yearly, result.is_jp_lifetime, result.is_pro_ocr, result.limit_chats)
+        stateStop(result.is_lifetime, result.is_pro_yearly, result.is_jp_lifetime, result.is_pro_ocr, result.limit_chats, result.time_delay)
     }
 });
 buttonElement.addEventListener('click', () => {
     if (!buttonElement.classList.contains('green')) {
         chrome.storage.local.set({ state: "working"}).then(() => {
             console.log("Worker is started!");
-            stateWork(checkIsLifetime.checked, checkIsProYearly.checked, checkIsJpLifetime.checked, checkIsProOCRPromo.checked, inputLimitChats.value);
+            stateWork(checkIsLifetime.checked, checkIsProYearly.checked, checkIsJpLifetime.checked, checkIsProOCRPromo.checked, inputLimitChats.value, inputTimeDelay.value);
         });
 
     } else {
         chrome.storage.local.set({ state: "stopped" }).then(() => {
             console.log("Worker is stopped!");
-            stateStop(checkIsLifetime.checked, checkIsProYearly.checked, checkIsJpLifetime.checked, checkIsProOCRPromo.checked, inputLimitChats.value);
+            stateStop(checkIsLifetime.checked, checkIsProYearly.checked, checkIsJpLifetime.checked, checkIsProOCRPromo.checked, inputLimitChats.value, inputTimeDelay.value);
         });
 
     }
@@ -139,8 +153,18 @@ buttonSubmitLimitChats.addEventListener('click', () => {
     chrome.storage.local.set({ limit_chats: parseInt(inputLimitChats.value) }).then(() => {
         console.log("Limit chats is set!");
     });
-    infoBanner.style.display = 'block';
+    infoBannerLimitChat.style.display = 'block';
     setTimeout(() => {
-        infoBanner.style.display = 'none'; // Hide the element after 3000ms
+        infoBannerLimitChat.style.display = 'none'; // Hide the element after 3000ms
+    }, 2000);
+});
+
+buttonSubmitTimeDelay.addEventListener('click', () => {
+    chrome.storage.local.set({ time_delay: parseInt(inputTimeDelay.value) }).then(() => {
+        console.log("Time delay is set!");
+    });
+    infoBannerTimeDelay.style.display = 'block';
+    setTimeout(() => {
+        infoBannerTimeDelay.style.display = 'none'; // Hide the element after 3000ms
     }, 2000);
 });

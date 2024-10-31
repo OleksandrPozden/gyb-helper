@@ -4,6 +4,7 @@ let isProYearly = false;
 let isJpLifetime = false;
 let IsProOCRPromo = false;
 let limitChats = 4;
+let timeDelay = 2000;
 let messageList = ["LIFETIME", "LIFETIME__NOT_CLICKED", "MONTHLY", "YEARLY", "PRO_YEARLY", "JP-LIFETIME", "NOTHING","PRO+OCR_PROMO"];
 let limitNumberOfVisits = 3;
 let pickUpCountryList = ["united states", "canada", "united kingdom", "australia", "new zealand"];
@@ -29,7 +30,7 @@ let main = async () => {
   while (isWorking==true) {
     await new Promise(r => setTimeout(r, 10));
     try {
-      const rows = document.querySelectorAll('.css-1vd7r1n');
+      const rows = document.querySelectorAll('.css-14wsju2');
       const nameElements = document.getElementsByClassName("css-1nv9oho");
       const names = Array.from(nameElements).filter(el => el.innerHTML === 'Oscar' || el.innerHTML === 'Anna').map(el => el.innerHTML);
       let activeSessions = names.length
@@ -82,11 +83,10 @@ let main = async () => {
             message += "__NOT_CLICKED";
           }
           else{
+            await new Promise(r => setTimeout(r, timeDelay));
             console.log("clicked");
-            await new Promise(r => setTimeout(r, 400));
             activeSessions += 1;
             element.parentElement.style.backgroundColor = "#6cf8a2";
-            //chatting.innerHTML = 'Oscar'
             buttonElement.click();
           }
         }
@@ -96,28 +96,26 @@ let main = async () => {
               pickUpEmailList.includes(customerEmail.split("@")[1]) &&
               numberOfVisits < limitNumberOfVisits
             ){
+              await new Promise(r => setTimeout(r, timeDelay));
               console.log("clicked");
-              await new Promise(r => setTimeout(r, 400));
               activeSessions += 1;
               element.parentElement.style.backgroundColor = "#6cf8a2";
-              //chatting.innerHTML = 'Oscar'
               buttonElement.click();
           }
         }
         if (message === "JP-LIFETIME" && isJpLifetime==true){
           if (numberOfVisits < limitNumberOfVisits){
+              await new Promise(r => setTimeout(r, timeDelay));
               console.log("clicked jp-lifetime");
-              await new Promise(r => setTimeout(r, 400));
               activeSessions += 1;
               element.parentElement.style.backgroundColor = "#6cf8a2";
-              //chatting.innerHTML = 'Oscar'
               buttonElement.click();
           }
         }
         if (message === "PRO+OCR_PROMO" && IsProOCRPromo==true){
           if (numberOfVisits < limitNumberOfVisits){
+              await new Promise(r => setTimeout(r, timeDelay));
               console.log("clicked pro+ocr (promo)");
-              await new Promise(r => setTimeout(r, 400));
               activeSessions += 1;
               element.parentElement.style.backgroundColor = "#6cf8a2";
               buttonElement.click();
@@ -131,7 +129,7 @@ let main = async () => {
   }
 }
 
-let runApp = (is_lifetime, is_pro_yearly, is_jp_lifetime, is_pro_ocr, limit_chats) => {
+let runApp = (is_lifetime, is_pro_yearly, is_jp_lifetime, is_pro_ocr, limit_chats, time_delay) => {
   if (isWorking == false) {
     console.log("started")
     isWorking = true
@@ -140,6 +138,7 @@ let runApp = (is_lifetime, is_pro_yearly, is_jp_lifetime, is_pro_ocr, limit_chat
     isProYearly = is_pro_yearly
     IsProOCRPromo = is_pro_ocr
     limitChats = limit_chats || 4
+    timeDelay = time_delay || 400
     main()
     
   }
@@ -150,11 +149,11 @@ let stopApp = () => {
   isWorking = false
 }
 
-chrome.storage.local.get(["state", "is_lifetime", "is_jp_lifetime", "is_pro_ocr", "is_pro_yearly"]).then(result => {
+chrome.storage.local.get(["state", "is_lifetime", "is_jp_lifetime", "is_pro_ocr", "is_pro_yearly", "time_delay"]).then(result => {
   console.log("Get information on state")
   console.log(result)
   if (result.state == 'working') {
-    runApp(result.is_lifetime, result.is_pro_yearly, result.is_jp_lifetime, result.is_pro_ocr, result.limit_chats);
+    runApp(result.is_lifetime, result.is_pro_yearly, result.is_jp_lifetime, result.is_pro_ocr, result.limit_chats, result.time_delay);
   }
   else {
     stopApp();
@@ -182,10 +181,14 @@ chrome.storage.onChanged.addListener((changes, areaName) =>{
     console.log(`LimitChats is ${changes.limit_chats.newValue}`)
     limitChats = changes.limit_chats.newValue;
   }
+  else if (changes.time_delay != undefined){
+    console.log(`TimeDelay is ${changes.time_delay.newValue}`)
+    timeDelay = changes.time_delay.newValue;
+  }
   else { 
     if (changes.state.newValue == 'working'){
-      chrome.storage.local.get(["is_lifetime", "is_pro_yearly", "is_jp_lifetime", "is_pro_ocr", "limit_chats"]).then(result => {
-        runApp(result.is_lifetime, result.is_pro_yearly, result.is_jp_lifetime, result.is_pro_ocr, result.limit_chats);
+      chrome.storage.local.get(["is_lifetime", "is_pro_yearly", "is_jp_lifetime", "is_pro_ocr", "limit_chats", "time_delay"]).then(result => {
+        runApp(result.is_lifetime, result.is_pro_yearly, result.is_jp_lifetime, result.is_pro_ocr, result.limit_chats, result.time_delay);
       });
     }
     else {
