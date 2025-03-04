@@ -10,6 +10,10 @@ venv\Scripts\activate
 `
 # Release notes:
 
+## 0.4.3 
+    - bugfixes
+    - Add new toggle to pick up *GYB Website* group
+
 ## 0.4.2
     - Dynamically change time delay
 
@@ -19,7 +23,7 @@ venv\Scripts\activate
 
 ## 0.3.0
     - Add Pro Yearly as a new type
-    - Use switcher to pick up separetely Lifetim and Pro Yearly
+    - Use switcher to pick up separetely Lifetime and Pro Yearly
     - Update web-UI. Add new layout
 
 ## 0.2.9

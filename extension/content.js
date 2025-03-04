@@ -15,6 +15,7 @@ let isLifetime = false;
 let isProYearly = false;
 let isJpLifetime = false;
 let IsProOCRPromo = false;
+let isGroupGYBwebsite = false;
 let limitChats = 4;
 let timeDelay = 2000;
 let activeSessions = new Proxy({ value: 0 }, numberOfActiveSessionsHandler);
@@ -38,12 +39,18 @@ let isCountryAllowed = (country) => {
   }
 }
 
+let cleanString = (str) => {
+  return str
+    .trim()                
+    .replace(/\s+/g, ' ');
+};
+
 let main = async () => {
   console.log("main() was invoked")
   while (isWorking==true) {
     await new Promise(r => setTimeout(r, 10));
     try {
-      const rows = document.querySelectorAll('.css-14wsju2');
+      const rows = document.querySelectorAll("[role='row'] > div");
       const nameElements = document.getElementsByClassName("css-1nv9oho");
       const names = Array.from(nameElements).filter(el => el.innerHTML === 'Oscar' || el.innerHTML === 'Anna').map(el => el.innerHTML);
       activeSessions.value = names.length
@@ -53,10 +60,13 @@ let main = async () => {
         const numberOfVisits = element.querySelector(".css-1eh3oew .css-plwatf").textContent;
         const country = element.querySelector('.css-f2kktt').textContent;
         const buttonElement = element.querySelector('.css-1hb5p1j>div button');
-        const urlElement = element.querySelector('.css-1xicsyo');
-        const url = urlElement.getAttribute('href');
         const placeForOrderId = element.querySelector('.css-yuv2pa');
+        const groupName = cleanString(element.querySelector('.css-1jgrkqb').textContent);
+        const urlElement = element.querySelector('.css-4v3nmn');
+        const url = urlElement ? urlElement.getAttribute('href') : null;
         
+        console.log(groupName);
+
         if (!buttonElement || !buttonElement.textContent.toLowerCase().includes("start chat")) {
           continue;
         }
@@ -65,6 +75,18 @@ let main = async () => {
         }
         console.log(buttonElement.textContent.toLowerCase());
         console.log(urlElement.innerHTML);
+
+        if (groupName == 'GYB website'){
+          await new Promise(r => setTimeout(r, timeDelay));
+          console.log("clicked group: GYB website");
+          activeSessions.value += 1;
+          element.parentElement.style.backgroundColor = "#6cf8a2";
+          buttonElement.click();
+        }
+        if (!url) {
+          console.log("Skipped. Reason: no URL found");
+          continue;
+        }
         const response = await fetch("http://127.0.0.1:5000", {
           method: 'POST',
           headers: {
@@ -141,7 +163,7 @@ let main = async () => {
   }
 }
 
-let runApp = (is_lifetime, is_pro_yearly, is_jp_lifetime, is_pro_ocr, limit_chats, time_delay) => {
+let runApp = (is_lifetime, is_pro_yearly, is_jp_lifetime, is_pro_ocr, is_group_gybwebsite, limit_chats, time_delay) => {
   if (isWorking == false) {
     console.log("started")
     isWorking = true
@@ -149,6 +171,7 @@ let runApp = (is_lifetime, is_pro_yearly, is_jp_lifetime, is_pro_ocr, limit_chat
     isJpLifetime = is_jp_lifetime
     isProYearly = is_pro_yearly
     IsProOCRPromo = is_pro_ocr
+    isGroupGYBwebsite = is_group_gybwebsite
     limitChats = limit_chats || 4
     timeDelay = time_delay || 400
     main()
@@ -161,11 +184,11 @@ let stopApp = () => {
   isWorking = false
 }
 
-chrome.storage.local.get(["state", "is_lifetime", "is_jp_lifetime", "is_pro_ocr", "is_pro_yearly", "time_delay"]).then(result => {
+chrome.storage.local.get(["state", "is_lifetime", "is_jp_lifetime", "is_pro_ocr", "is_pro_yearly", "is_group_gybwebsite", "limit_chats", "time_delay"]).then(result => {
   console.log("Get information on state")
   console.log(result)
   if (result.state == 'working') {
-    runApp(result.is_lifetime, result.is_pro_yearly, result.is_jp_lifetime, result.is_pro_ocr, result.limit_chats, result.time_delay);
+    runApp(result.is_lifetime, result.is_pro_yearly, result.is_jp_lifetime, result.is_pro_ocr, result.is_group_gybwebsite, result.limit_chats, result.time_delay);
   }
   else {
     stopApp();
@@ -189,6 +212,10 @@ chrome.storage.onChanged.addListener((changes, areaName) =>{
     console.log(`IsProOCRPromo is ${changes.is_pro_ocr.newValue}`)
     IsProOCRPromo = changes.is_pro_ocr.newValue;
   }
+  else if (changes.is_group_gybwebsite != undefined){
+    console.log(`IsGroupGYBwebsite is ${changes.is_group_gybwebsite.newValue}`)
+    isGroupGYBwebsite = changes.is_group_gybwebsite.newValue;
+  }
   else if (changes.limit_chats != undefined){
     console.log(`LimitChats is ${changes.limit_chats.newValue}`)
     limitChats = changes.limit_chats.newValue;
@@ -199,8 +226,8 @@ chrome.storage.onChanged.addListener((changes, areaName) =>{
   }
   else { 
     if (changes.state.newValue == 'working'){
-      chrome.storage.local.get(["is_lifetime", "is_pro_yearly", "is_jp_lifetime", "is_pro_ocr", "limit_chats", "time_delay"]).then(result => {
-        runApp(result.is_lifetime, result.is_pro_yearly, result.is_jp_lifetime, result.is_pro_ocr, result.limit_chats, result.time_delay);
+      chrome.storage.local.get(["is_lifetime", "is_pro_yearly", "is_jp_lifetime", "is_pro_ocr", "is_group_gybwebsite", "limit_chats", "time_delay"]).then(result => {
+        runApp(result.is_lifetime, result.is_pro_yearly, result.is_jp_lifetime, result.is_pro_ocr, result.is_group_gybwebsite, result.limit_chats, result.time_delay);
       });
     }
     else {
