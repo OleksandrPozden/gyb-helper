@@ -76,7 +76,7 @@ let main = async () => {
         console.log(buttonElement.textContent.toLowerCase());
         console.log(urlElement.innerHTML);
 
-        if (groupName == 'GYB website' && activeSessions.value < limitChats && numberOfVisits < limitNumberOfVisits && isCountryAllowed(country)){
+        if (isGroupGYBwebsite && groupName == 'GYB website' && activeSessions.value < limitChats && numberOfVisits < limitNumberOfVisits && isCountryAllowed(country)){
           await new Promise(r => setTimeout(r, timeDelay));
           console.log("clicked group: GYB website");
           activeSessions.value += 1;
